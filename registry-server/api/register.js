@@ -15,23 +15,25 @@ module.exports = async (req, res) => {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
-    const { username, nodeId, addresses, pubkey, bio } = body;
+    const { username, peer_id, peerId, nodeId } = body;
+
+    const resolvedPeerId = peer_id || peerId || nodeId;
 
     if (!username) {
       return res.status(400).json({ ok: false, error: 'Missing required field: username' });
     }
-    if (!nodeId) {
-      return res.status(400).json({ ok: false, error: 'Missing required field: nodeId' });
+    if (!resolvedPeerId) {
+      return res.status(400).json({ ok: false, error: 'Missing required field: peer_id' });
     }
 
-    const record = await registerUser({ username, nodeId, addresses, pubkey, bio });
+    const record = await registerUser({ username, peer_id: resolvedPeerId });
     return res.status(201).json({
       ok: true,
-      message: `Handle '@${record.username}' registered successfully on Murmur Registry!`,
+      message: `Handle '@${record.username}' registered successfully!`,
       peer: record,
     });
   } catch (err) {
-    const isConflict = err.message.includes('already registered');
+    const isConflict = err.message.includes('already taken');
     return res.status(isConflict ? 409 : 400).json({
       ok: false,
       error: err.message,

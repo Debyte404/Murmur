@@ -1,383 +1,352 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MURMUR // Direct P2P Terminal Chat over QUIC</title>
+  <title>MURMUR // Direct P2P Terminal Chat Engine</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   
-  <!-- Fonts: Space Grotesk (Editorial Headers) + Inter (Crisp UI) + JetBrains Mono (Terminal & Code) -->
+  <!-- Fonts: Space Grotesk (Display Headings), Syne (Bold Keynotes), JetBrains Mono (Terminal & Tech) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <!-- Ambient Subtle Grid Background -->
-  <div class="bg-grid-pattern" aria-hidden="true"></div>
-  <div class="glow-radial-citrus" aria-hidden="true"></div>
+  <!-- Ambient Dot-Matrix Tech Grid & Citrus Lighting -->
+  <div class="dot-matrix-bg" aria-hidden="true"></div>
+  <div class="glow-orb orb-lime" aria-hidden="true"></div>
+  <div class="glow-orb orb-cyan" aria-hidden="true"></div>
+  <div class="glow-orb orb-amber" aria-hidden="true"></div>
 
-  <!-- Announcement Bar (Watermelon UI Pill Style) -->
-  <aside class="announcement-bar">
-    <div class="container announcement-inner">
-      <span class="badge-new">NEW</span>
-      <span class="announcement-text">
-        <strong>Murmur v0.1.0</strong>: Multiplexed QUIC streams via <code>rustp2p-quic</code> & global registry live at <code>murmur.debyte.space</code>
-      </span>
-      <a href="#quickstart" class="announcement-link">Get Started <span>&rarr;</span></a>
-    </div>
-  </aside>
-
-  <!-- Navigation Bar -->
+  <!-- Minimalist High-End Navbar (Nothing / Apple inspired) -->
   <header class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="brand-link">
-        <div class="brand-symbol">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="4 17 10 11 4 5"></polyline>
-            <line x1="12" y1="19" x2="20" y2="19"></line>
-          </svg>
-        </div>
-        <span class="brand-name">murmur<span class="dot-lime">.</span></span>
+    <div class="container nav-content">
+      <a href="#" class="brand">
+        <span class="brand-bracket">[</span>
+        <span class="brand-text">MURMUR</span>
+        <span class="brand-dot"></span>
+        <span class="brand-bracket">]</span>
       </a>
 
-      <!-- Server Status Badge -->
-      <div class="status-pill" id="statusPill" title="Live status of Upstash Redis & Vercel registry">
-        <span class="pulse-indicator"></span>
-        <span class="status-label">REGISTRY: <strong id="healthState">ONLINE</strong></span>
-        <span class="status-subdomain">murmur.debyte.space</span>
+      <!-- Registry Status (Sharp Minimal Tag) -->
+      <div class="live-tag" id="registryStatusTag">
+        <span class="radar-dot"></span>
+        <span class="tag-title">REGISTRY:</span>
+        <span class="tag-val" id="healthState">ONLINE</span>
+        <span class="tag-domain">murmur.debyte.space</span>
       </div>
 
-      <nav class="nav-menu">
-        <a href="#flow" class="nav-item">How It Works</a>
-        <a href="#interactive-tui" class="nav-item">Interactive TUI</a>
-        <a href="#handle-checker" class="nav-item">Check Handle</a>
-        <a href="#architecture" class="nav-item">QUIC vs Cloud</a>
-        <a href="#quickstart" class="btn-watermelon-sm">
-          <span>Install CLI</span>
-          <span class="kbd-shortcut">⎘</span>
+      <nav class="nav-links">
+        <a href="#showcase" class="nav-anchor">Showcase</a>
+        <a href="#handle-search" class="nav-anchor">Claim Handle</a>
+        <a href="#speed" class="nav-anchor">Performance</a>
+        <a href="#install" class="btn-terminal-sm">
+          <span>INSTALL CLI</span>
+          <span class="btn-arrow">&rarr;</span>
         </a>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- HERO SECTION -->
-    <section class="hero-wrap">
-      <div class="container hero-container">
+    <!-- HERO SECTION (KINETIC, ANGLED 3D PRODUCT PROMOTION) -->
+    <section class="hero-section">
+      <div class="container hero-grid">
         
-        <!-- Breadcrumb / Eyebrow -->
-        <div class="hero-eyebrow">
-          <span class="eyebrow-chip">PROTOCOL // RUSTP2P-QUIC</span>
-          <span class="eyebrow-divider">/</span>
-          <span class="eyebrow-text">Zero Relay Servers. 100% Direct Packets.</span>
-        </div>
-
-        <!-- Giant Editorial Headline -->
-        <h1 class="hero-title">
-          The terminal chat engine that <span class="text-lime">cuts the cord</span>.
-        </h1>
-
-        <p class="hero-lead">
-          Murmur replaces centralized chat silos with <strong>direct peer-to-peer QUIC streams</strong>, NAT hole-punching, and an instant <strong>Ratatui TUI</strong>. 
-          Your messages travel direct from machine to machine with zero intermediate disks logging your conversations.
-        </p>
-
-        <!-- CTA Action Cluster -->
-        <div class="hero-cta-group">
-          <a href="#handle-checker" class="btn-watermelon-primary">
-            <span>Claim Your Global Handle</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#interactive-tui" class="btn-watermelon-secondary">
-            <span>Try TUI Simulator</span>
-          </a>
-        </div>
-
-        <!-- Terminal Quick-Install Snippet -->
-        <div class="install-bar">
-          <div class="install-bar-left">
-            <span class="install-prompt">$</span>
-            <span class="install-cmd">cargo install murmur-cli</span>
+        <!-- Left: Punchy Copy -->
+        <div class="hero-copy">
+          <div class="tech-badge">
+            <span class="tech-badge-dot"></span>
+            <span>NEXT-GEN PEER-TO-PEER CHAT // POWERED BY RUST</span>
           </div>
-          <button class="btn-copy-install" data-copy="cargo install murmur-cli" title="Copy to clipboard">
-            <span class="copy-text">Copy</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-        </div>
 
-        <!-- Key Metrics Strip -->
-        <div class="metrics-strip">
-          <div class="metric-card">
-            <div class="metric-value text-lime">0-RTT</div>
-            <div class="metric-label">QUIC Connection Resumption</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value text-white">0</div>
-            <div class="metric-label">Middleman Servers in DMs</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value text-cyan">&lt; 1ms</div>
-            <div class="metric-label">Ratatui Keystroke Render</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value text-amber">Ed25519</div>
-            <div class="metric-label">Global Cryptographic Identity</div>
-          </div>
-        </div>
+          <h1 class="hero-title">
+            TERMINAL CHAT.<br />
+            <span class="gradient-citrus">REINVENTED.</span>
+          </h1>
 
-      </div>
-    </section>
-
-    <!-- ARCHITECTURAL FLOW STEPPER (HOW IT WORKS WITH THE RUST APP) -->
-    <section class="section-flow" id="flow">
-      <div class="container">
-        
-        <div class="section-heading">
-          <span class="section-badge">END-TO-END WORKFLOW</span>
-          <h2 class="heading-lg">How Murmur & The Registry Work Together</h2>
-          <p class="heading-sub">
-            The registry is <strong>only a matchmaker</strong> for finding peer addresses. It never touches your chat data.
+          <p class="hero-lead">
+            No corporate cloud. No telemetry. No Electron bloat.<br />
+            Just raw, lightning-fast <strong>direct QUIC datagrams</strong> between machines and a razor-sharp <strong>Ratatui TUI</strong>.
           </p>
+
+          <div class="hero-cta-row">
+            <a href="#handle-search" class="btn-citrus-primary">
+              <span>CLAIM YOUR HANDLE</span>
+              <span class="arrow-icon">&rarr;</span>
+            </a>
+            <a href="#showcase" class="btn-citrus-outline">
+              <span>LIVE SIMULATOR</span>
+            </a>
+          </div>
+
+          <!-- Quick Copy Install Block -->
+          <div class="quick-install-box">
+            <div class="install-left">
+              <span class="install-prompt">&gt;</span>
+              <span class="install-text">cargo install murmur-cli</span>
+            </div>
+            <button class="btn-copy-install" data-copy="cargo install murmur-cli" title="Copy install command">
+              <span class="copy-label">COPY</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Stepper Cards Grid -->
-        <div class="flow-stepper">
-          
-          <!-- Step 1 -->
-          <div class="flow-card">
-            <div class="flow-step-num">01</div>
-            <div class="flow-card-header">
-              <span class="flow-tag tag-lime">LOCAL BOOT</span>
-              <h3 class="flow-title">Node Init & STUN Punch</h3>
-            </div>
-            <p class="flow-desc">
-              Your Rust CLI app boots up, generates an Ed25519 keypair, binds local UDP port <code>8080</code>, and contacts STUN servers to discover its public IP & NAT mapping.
-            </p>
-            <div class="flow-code-preview">
-              <code>$ murmur run --handle @alice</code>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="flow-card">
-            <div class="flow-step-num">02</div>
-            <div class="flow-card-header">
-              <span class="flow-tag tag-cyan">MATCHMAKING</span>
-              <h3 class="flow-title">Global Handle Registry</h3>
-            </div>
-            <p class="flow-desc">
-              The node sends a one-time <code>POST /api/register</code> to <code>murmur.debyte.space</code>. Upstash Redis verifies handle uniqueness and records your active QUIC endpoint.
-            </p>
-            <div class="flow-code-preview">
-              <code>SET murmur:user:alice &rarr; 200 OK</code>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="flow-card">
-            <div class="flow-step-num">03</div>
-            <div class="flow-card-header">
-              <span class="flow-tag tag-amber">PEER DISCOVERY</span>
-              <h3 class="flow-title">Query Peer Address</h3>
-            </div>
-            <p class="flow-desc">
-              When Alice types <code>/connect @bob</code>, her Rust client calls <code>GET /api/lookup?username=bob</code>. The registry returns Bob’s public IP, port, and Ed25519 public key.
-            </p>
-            <div class="flow-code-preview">
-              <code>GET /api/lookup?username=bob</code>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="flow-card highlight-step">
-            <div class="flow-step-num">04</div>
-            <div class="flow-card-header">
-              <span class="flow-tag tag-lime">100% P2P MESH</span>
-              <h3 class="flow-title">Direct Encrypted QUIC</h3>
-            </div>
-            <p class="flow-desc">
-              Alice and Bob punch NAT holes and open a direct TLS 1.3 / QUIC tunnel. <strong>All messages, keystrokes, and files flow strictly peer-to-peer.</strong> Even if the server goes offline, your chat continues!
-            </p>
-            <div class="flow-code-preview">
-              <code>Alice &hArr; [Direct QUIC Tunnel] &hArr; Bob</code>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- INTERACTIVE TUI DEMO (WATERMELON UI TERMINAL COMPONENT) -->
-    <section class="section-demo" id="interactive-tui">
-      <div class="container">
-        
-        <div class="section-heading">
-          <span class="section-badge">LIVE BROWSER SIMULATOR</span>
-          <h2 class="heading-lg">The Ratatui Terminal Interface</h2>
-          <p class="heading-sub">
-            Zero webviews. Zero Electron bloat. Instant keyboard-first terminal ergonomics. Try typing a message or triggering packets below.
-          </p>
-        </div>
-
-        <!-- Terminal Window Frame -->
-        <div class="terminal-window">
-          
-          <!-- Window Header / Tabs -->
-          <div class="window-header">
-            <div class="window-controls">
-              <span class="control-btn close"></span>
-              <span class="control-btn minimize"></span>
-              <span class="control-btn maximize"></span>
-            </div>
+        <!-- Right: Angled 3D Isometric Terminal Product Render -->
+        <div class="hero-visual">
+          <div class="isometric-stage">
             
-            <div class="window-tabs">
-              <button class="win-tab active" data-tab="tui">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                <span>Ratatui TUI View</span>
+            <!-- Floating Holographic Badges -->
+            <div class="float-chip chip-1">
+              <span class="chip-dot lime"></span>
+              <span>0-RTT QUIC CONNECTION</span>
+            </div>
+            <div class="float-chip chip-2">
+              <span class="chip-dot cyan"></span>
+              <span>RATATUI 0.30 TUI</span>
+            </div>
+            <div class="float-chip chip-3">
+              <span class="chip-dot amber"></span>
+              <span>ZERO RELAY SERVERS</span>
+            </div>
+
+            <!-- Angled Terminal Viewport -->
+            <div class="terminal-3d-box">
+              <div class="term-bar">
+                <div class="term-buttons">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <div class="term-title">murmur-tui // session: @debyte</div>
+                <div class="term-signal">
+                  <span class="signal-bar b1"></span>
+                  <span class="signal-bar b2"></span>
+                  <span class="signal-bar b3"></span>
+                  <span class="signal-bar b4"></span>
+                </div>
+              </div>
+
+              <!-- Animated Chat Feed -->
+              <div class="term-screen">
+                <div class="stream-line system-line">
+                  <span class="ts">[16:00:01]</span>
+                  <span class="txt">&gt;&gt;&gt; rustp2p-quic endpoint bound to udp://0.0.0.0:8080</span>
+                </div>
+                <div class="stream-line system-line">
+                  <span class="ts">[16:00:02]</span>
+                  <span class="txt">&gt;&gt;&gt; Direct 0-RTT QUIC stream established with @alice</span>
+                </div>
+                <div class="stream-line chat-line">
+                  <span class="author alice">&lt;@alice&gt;</span>
+                  <span class="bubble">Zero servers in the middle. Direct machine-to-machine packets.</span>
+                </div>
+                <div class="stream-line chat-line">
+                  <span class="author neo">&lt;@neo&gt;</span>
+                  <span class="bubble">Input latency is practically 0ms. Ratatui is blazing fast.</span>
+                </div>
+                <div class="stream-line chat-line user-line">
+                  <span class="author debyte">&lt;@debyte&gt;</span>
+                  <span class="bubble active">Pure peer-to-peer over QUIC. No middleman reading your DMs.</span>
+                </div>
+                
+                <div class="term-prompt-line">
+                  <span class="prompt-sym">&gt;</span>
+                  <span class="typed-text">murmur broadcast "Hello P2P Mesh!"</span>
+                  <span class="cursor-block"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- KINETIC RUNNING MARQUEE TAPE (ANGLED ACCENT) -->
+    <div class="angled-marquee-wrap">
+      <div class="marquee-track">
+        <span class="m-item highlight">100% RUST</span>
+        <span class="m-slash">//</span>
+        <span class="m-item">NO CENTRAL DISKS</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">MULTIPLEXED QUIC STREAMS</span>
+        <span class="m-slash">//</span>
+        <span class="m-item">RATATUI TUI ENGINE</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">ZERO MIDDLEMEN</span>
+        <span class="m-slash">//</span>
+        <span class="m-item">SUB-MILLI SPEED</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">SOVEREIGN ENCRYPTION</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">100% RUST</span>
+        <span class="m-slash">//</span>
+        <span class="m-item">NO CENTRAL DISKS</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">MULTIPLEXED QUIC STREAMS</span>
+        <span class="m-slash">//</span>
+        <span class="m-item">RATATUI TUI ENGINE</span>
+        <span class="m-slash">//</span>
+        <span class="m-item highlight">ZERO MIDDLEMEN</span>
+        <span class="m-slash">//</span>
+      </div>
+    </div>
+
+    <!-- LIVE INTERACTIVE TUI SHOWCASE -->
+    <section class="section-showcase" id="showcase">
+      <div class="container">
+        
+        <div class="section-headline-block">
+          <span class="section-kicker">INTERACTIVE SIMULATION</span>
+          <h2 class="section-big-title">TOUCH THE HARDWARE OF CHAT</h2>
+          <p class="section-desc">
+            Experience the snappiest terminal user interface ever engineered. Test live packet triggers, stream inspect, or broadcast your own message.
+          </p>
+        </div>
+
+        <!-- Terminal Showcase Chassis -->
+        <div class="terminal-chassis">
+          
+          <!-- Top Chassis Toolbar -->
+          <div class="chassis-bar">
+            <div class="chassis-tabs">
+              <button class="chassis-tab active" data-tab="live-tui">
+                <span class="tab-indicator"></span>
+                <span>TUI TERMINAL</span>
               </button>
-              <button class="win-tab" data-tab="packets">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <span>QUIC Stream Inspector</span>
+              <button class="chassis-tab" data-tab="stream-inspect">
+                <span>QUIC PACKET INSPECT</span>
               </button>
-              <button class="win-tab" data-tab="api">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                <span>Registry Payload (JSON)</span>
+              <button class="chassis-tab" data-tab="wire-raw">
+                <span>RAW WIRE RECORD</span>
               </button>
             </div>
 
-            <div class="window-telemetry">
-              <span class="badge-status online">● QUIC P2P</span>
-              <span class="telemetry-item">RTT: <strong>14ms</strong></span>
+            <div class="chassis-stats">
+              <div class="stat-pill">
+                <span class="stat-k">PEERS:</span>
+                <span class="stat-v text-lime">3 ONLINE</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-k">STREAM RTT:</span>
+                <span class="stat-v text-cyan">12ms</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-k">LOSS:</span>
+                <span class="stat-v text-white">0.0%</span>
+              </div>
             </div>
           </div>
 
-          <!-- TAB 1: Terminal View -->
-          <div class="tab-pane active" id="pane-tui">
-            <div class="tui-layout">
+          <!-- TAB PANE 1: Interactive TUI -->
+          <div class="chassis-pane active" id="pane-live-tui">
+            <div class="tui-viewport">
               
-              <!-- Channels / Peers Sidebar -->
-              <aside class="tui-sidebar">
-                <div class="tui-section-title">┌─ PEERS / CHANNELS ──┐</div>
-                <div class="tui-channel-list">
-                  <div class="tui-channel active" data-channel="mesh">
-                    <span class="channel-hash">#</span>
-                    <span class="channel-name">global-mesh</span>
-                    <span class="channel-count">3</span>
+              <!-- Channels List -->
+              <div class="tui-pane-left">
+                <div class="tui-header-tag">[ CHANNELS & MESH ]</div>
+                <div class="tui-chan-row active">
+                  <span class="chan-hash">#</span>
+                  <span class="chan-name">global-mesh</span>
+                  <span class="chan-badge">ACTIVE</span>
+                </div>
+                <div class="tui-chan-row">
+                  <span class="chan-hash">@</span>
+                  <span class="chan-name">alice</span>
+                  <span class="chan-dot green"></span>
+                </div>
+                <div class="tui-chan-row">
+                  <span class="chan-hash">@</span>
+                  <span class="chan-name">neo</span>
+                  <span class="chan-dot green"></span>
+                </div>
+                <div class="tui-chan-row">
+                  <span class="chan-hash">@</span>
+                  <span class="chan-name">debyte (host)</span>
+                  <span class="chan-badge amber">LOCAL</span>
+                </div>
+
+                <!-- Live Waveform Equalizer -->
+                <div class="tui-header-tag mt-auto">[ QUIC AUDIO / PKT BURST ]</div>
+                <div class="equalizer-box">
+                  <span class="eq-bar" style="--d: 0.1s"></span>
+                  <span class="eq-bar" style="--d: 0.3s"></span>
+                  <span class="eq-bar" style="--d: 0.2s"></span>
+                  <span class="eq-bar" style="--d: 0.5s"></span>
+                  <span class="eq-bar" style="--d: 0.15s"></span>
+                  <span class="eq-bar" style="--d: 0.4s"></span>
+                  <span class="eq-bar" style="--d: 0.25s"></span>
+                  <span class="eq-bar" style="--d: 0.6s"></span>
+                </div>
+              </div>
+
+              <!-- Main Chat Screen -->
+              <div class="tui-pane-right">
+                <div class="tui-log-feed" id="liveChatFeed">
+                  <div class="feed-entry sys">
+                    <span class="f-ts">[16:04:10]</span>
+                    <span class="f-text">&gt;&gt;&gt; Connected to Murmur Mesh. Peer ID: 0x10000001</span>
                   </div>
-                  <div class="tui-channel" data-channel="alice">
-                    <span class="channel-at">@</span>
-                    <span class="channel-name">alice</span>
-                    <span class="channel-status online">●</span>
+                  <div class="feed-entry">
+                    <span class="f-ts">[16:04:12]</span>
+                    <span class="f-author alice">&lt;@alice&gt;</span>
+                    <span class="f-msg">Verified Ed25519 handshake. No central company relaying our talk.</span>
                   </div>
-                  <div class="tui-channel" data-channel="neo">
-                    <span class="channel-at">@</span>
-                    <span class="channel-name">neo</span>
-                    <span class="channel-status online">●</span>
-                  </div>
-                  <div class="tui-channel" data-channel="you">
-                    <span class="channel-at">@</span>
-                    <span class="channel-name">you (local)</span>
-                    <span class="channel-badge">HOST</span>
+                  <div class="feed-entry">
+                    <span class="f-ts">[16:04:15]</span>
+                    <span class="f-author neo">&lt;@neo&gt;</span>
+                    <span class="f-msg">Multiplexed QUIC means if a file stream hiccups, our chat never freezes.</span>
                   </div>
                 </div>
 
-                <div class="tui-section-title mt-auto">┌─ QUIC LINK INFO ────┐</div>
-                <div class="tui-meta-box">
-                  <div class="meta-row"><span>Transport:</span> <strong class="text-lime">UDP / QUIC</strong></div>
-                  <div class="meta-row"><span>Streams:</span> <strong>#7 bidi</strong></div>
-                  <div class="meta-row"><span>Packet Loss:</span> <strong class="text-cyan">0.0%</strong></div>
-                  <div class="meta-row"><span>Cipher:</span> <strong>ChaCha20</strong></div>
-                </div>
-              </aside>
-
-              <!-- Main Chat Stream -->
-              <div class="tui-content">
-                <div class="tui-chat-header">
-                  <span>┌─ #global-mesh ────────────────────────────────────────────────────────┐</span>
-                </div>
-
-                <div class="tui-scroll-area" id="tuiChatArea">
-                  <div class="msg-row system">
-                    <span class="msg-ts">[15:00:01]</span>
-                    <span class="msg-body">&gt;&gt;&gt; rustp2p-quic endpoint online on udp://0.0.0.0:8080</span>
-                  </div>
-                  <div class="msg-row system">
-                    <span class="msg-ts">[15:00:02]</span>
-                    <span class="msg-body">&gt;&gt;&gt; Querying murmur.debyte.space for peer addresses...</span>
-                  </div>
-                  <div class="msg-row system">
-                    <span class="msg-ts">[15:00:03]</span>
-                    <span class="msg-body">&gt;&gt;&gt; STUN UDP hole-punch successful. Established QUIC 0-RTT tunnel with @alice and @neo.</span>
-                  </div>
-                  <div class="msg-row">
-                    <span class="msg-ts">[15:02:11]</span>
-                    <span class="msg-author user-alice">&lt;@alice&gt;</span>
-                    <span class="msg-body">P2P connection established! Packets are flowing directly through QUIC datagrams.</span>
-                  </div>
-                  <div class="msg-row">
-                    <span class="msg-ts">[15:02:44]</span>
-                    <span class="msg-author user-neo">&lt;@neo&gt;</span>
-                    <span class="msg-body">No centralized company storing or analyzing our DMs. Just pure math and encryption.</span>
-                  </div>
-                </div>
-
-                <!-- Input Field -->
-                <div class="tui-input-line">
-                  <span class="input-prompt">&gt;</span>
-                  <input type="text" id="tuiInput" placeholder="Type message and press Enter (or click triggers below)..." autocomplete="off" />
-                  <button class="tui-btn-send" id="tuiSend">Send</button>
+                <!-- Input Row -->
+                <div class="tui-input-row">
+                  <span class="input-sym">&gt;</span>
+                  <input type="text" id="simChatInput" placeholder="Type message and press Enter (or trigger actions below)..." autocomplete="off" />
+                  <button class="btn-tui-send" id="btnSimSend">SEND &rarr;</button>
                 </div>
               </div>
 
             </div>
           </div>
 
-          <!-- TAB 2: QUIC Packets View -->
-          <div class="tab-pane" id="pane-packets">
-            <div class="inspector-box">
-              <div class="inspector-header">
-                <span>LIVE QUIC STREAM MULTIPLEXER</span>
-                <span class="badge-tag">STREAM_ID: 0x07</span>
-              </div>
-              <pre class="inspector-code"><code>[QUIC FRAME 0x002] Type: STREAM (Off: 0, Len: 64, Fin: false)
-  └─ Sender: Ed25519(6c6f7264646562797465...) &rarr; @alice
-  └─ Encryption: ChaCha20-Poly1305 (Payload size: 64 bytes)
-  └─ Head-of-line blocking: NONE (Stream #7 independent of Stream #8)
-  └─ Connection Migration: Active (handles Wi-Fi &rarr; 5G transitions without drop)</code></pre>
+          <!-- TAB PANE 2: Stream Inspect -->
+          <div class="chassis-pane" id="pane-stream-inspect">
+            <div class="raw-terminal-view">
+              <div class="raw-row-hdr">QUIC MULTIPLEXER // BIDIRECTIONAL STREAM_ID: 0x04</div>
+              <pre class="raw-code"><code>[FRAME 0x004] STREAM_DATA (Offset: 0, Length: 88, Fin: 0)
+  ├─ SENDER_PEER_ID  : 0x10000001 (Ed25519 verified)
+  ├─ ENCRYPTION      : ChaCha20-Poly1305 AEAD (TLS 1.3)
+  ├─ HEAD-OF-LINE    : ELIMINATED (Independent QUIC Stream)
+  ├─ HOLE PUNCHING   : STUN RFC 8489 Cone-NAT Bypass (Success)
+  └─ TRANSPORT SPEED : 1,420 bytes/frame &bull; 0.38ms parse time</code></pre>
             </div>
           </div>
 
-          <!-- TAB 3: Registry Payload JSON -->
-          <div class="tab-pane" id="pane-api">
-            <div class="inspector-box">
-              <div class="inspector-header">
-                <span>UPSTASH REDIS REGISTRY RECORD (`GET /api/lookup?username=debyte`)</span>
-                <span class="badge-tag">murmur.debyte.space</span>
-              </div>
-              <pre class="inspector-code"><code>{
+          <!-- TAB PANE 3: Raw Wire -->
+          <div class="chassis-pane" id="pane-wire-raw">
+            <div class="raw-terminal-view">
+              <div class="raw-row-hdr">REGISTRY JSON CONTRACT // murmur.debyte.space</div>
+              <pre class="raw-code"><code>{
   "username": "debyte",
-  "node_id": "0x10000001",
-  "addresses": [
-    "quic://115.248.83.151:8080",
-    "udp://115.248.83.151:8080"
-  ],
-  "pubkey": "ed25519:6c6f7264646562797465616c7068616b65793031",
-  "registered_at": "2026-11-01T00:00:00.000Z",
-  "last_seen": "2026-11-10T15:45:00.000Z"
+  "peer_id": "0x10000001",
+  "registered_at": "2026-11-01T00:00:00.000Z"
 }</code></pre>
             </div>
           </div>
 
-          <!-- Interactive Micro-Triggers Toolbar -->
-          <div class="terminal-footer-toolbar">
-            <span class="toolbar-hint">QUICK SIMULATION TRIGGERS:</span>
-            <button class="btn-micro" id="simAliceMsg">💬 Peer Message</button>
-            <button class="btn-micro" id="simHandshake">🤝 0-RTT Handshake</button>
-            <button class="btn-micro" id="simPing">⚡ P2P Ping (14ms)</button>
-            <button class="btn-micro" id="simClear">⌫ Clear View</button>
+          <!-- Action Control Bar -->
+          <div class="chassis-footer">
+            <span class="footer-prompt">PACKET INJECTORS:</span>
+            <button class="btn-action-trigger" id="trigAlice">💬 Fake Incoming Message</button>
+            <button class="btn-action-trigger" id="trigHandshake">🤝 0-RTT Handshake Packet</button>
+            <button class="btn-action-trigger" id="trigPing">⚡ Broadcast Mesh Ping</button>
+            <button class="btn-action-trigger" id="trigClear">⌫ Clear Log</button>
           </div>
 
         </div>
@@ -385,46 +354,56 @@
       </div>
     </section>
 
-    <!-- LIVE HANDLE REGISTRY CHECKER (WATERMELON UI SEARCH CARD) -->
-    <section class="section-checker" id="handle-checker">
+    <!-- LIVE HANDLE SCANNER & CLAIM (NOTHING / SAMSUNG KEYNOTE STYLE) -->
+    <section class="section-handle" id="handle-search">
       <div class="container">
         
-        <div class="checker-card">
-          <div class="checker-header">
-            <span class="section-badge badge-cyan">GLOBAL IDENTITY REGISTRY</span>
-            <h2 class="checker-title">Reserve Your Handle on the Mesh</h2>
-            <p class="checker-sub">
-              To guarantee unique usernames globally without any chat relay, Murmur queries our lightweight Upstash Redis registry at <code>murmur.debyte.space</code>.
+        <div class="handle-stage">
+          <div class="handle-inner">
+            <div class="tech-badge-cyan">
+              <span class="tech-badge-dot"></span>
+              <span>GLOBAL IDENTITY // UPSTASH REDIS</span>
+            </div>
+
+            <h2 class="handle-headline">RESERVE YOUR HANDLE ON THE MESH</h2>
+            <p class="handle-sub">
+              No phone numbers. No email verification. No corporate tracking.<br />
+              Just unique, global handle ownership locked to your cryptographic peer ID.
             </p>
-          </div>
 
-          <!-- Search Input Bar -->
-          <div class="handle-search-bar">
-            <div class="search-prefix">@</div>
-            <input type="text" id="handleInput" placeholder="Type a handle (e.g. debyte, cipher, arch, satoshi)..." autocomplete="off" spellcheck="false" />
-            <button class="btn-check" id="btnCheckHandle">
-              <span id="btnCheckText">Check Availability</span>
-            </button>
-          </div>
-
-          <!-- Result Card (Stateful) -->
-          <div class="handle-result-card hidden" id="handleResultCard">
-            <div class="result-icon-badge" id="resultIcon">⚡</div>
-            <div class="result-content">
-              <div class="result-headline" id="resultTitle">Checking availability...</div>
-              <p class="result-desc" id="resultDesc"></p>
-              <div class="result-command-box" id="resultCommandBox"></div>
+            <!-- Search Console Input -->
+            <div class="scanner-search-box">
+              <span class="scanner-prefix">@</span>
+              <input type="text" id="handleSearchInput" placeholder="Enter your desired handle (e.g. debyte, matrix, satoshi)..." autocomplete="off" spellcheck="false" />
+              <button class="btn-scan" id="btnScanHandle">
+                <span id="btnScanLabel">CHECK HANDLE</span>
+                <span class="scan-radar-wave"></span>
+              </button>
             </div>
-          </div>
 
-          <!-- REST API Spec Preview -->
-          <div class="registry-api-strip">
-            <div class="api-strip-left">
-              <span class="method-badge">GET</span>
-              <span class="endpoint-text">https://murmur.debyte.space/api/check?username=:handle</span>
+            <!-- Dynamic Result Screen -->
+            <div class="scan-result-card hidden" id="scanResultCard">
+              <div class="result-badge-col" id="scanIcon">⚡</div>
+              <div class="result-info-col">
+                <div class="result-status-title" id="scanTitle">Checking...</div>
+                <div class="result-status-desc" id="scanDesc"></div>
+                <div class="result-cmd-box" id="scanCmdBox"></div>
+              </div>
             </div>
-            <div class="api-strip-right">
-              <span>Backed by Upstash Redis &bull; Vercel Serverless</span>
+
+            <div class="registry-specs-row">
+              <div class="spec-col">
+                <span class="spec-k">ENDPOINT:</span>
+                <span class="spec-v">murmur.debyte.space/api/check</span>
+              </div>
+              <div class="spec-col">
+                <span class="spec-k">DATABASE:</span>
+                <span class="spec-v">Upstash Serverless Redis</span>
+              </div>
+              <div class="spec-col">
+                <span class="spec-k">SCHEMA:</span>
+                <span class="spec-v">username &hArr; peer_id (Zero IPs)</span>
+              </div>
             </div>
           </div>
         </div>
@@ -432,86 +411,61 @@
       </div>
     </section>
 
-    <!-- COMPARISON MATRIX: OLD CLOUD VS MURMUR QUIC -->
-    <section class="section-comparison" id="architecture">
+    <!-- PERFORMANCE / BENTO POWER GRID (APPLE / SAMSUNG LAUNCH AESTHETIC) -->
+    <section class="section-power" id="speed">
       <div class="container">
         
-        <div class="section-heading">
-          <span class="section-badge badge-amber">SECURITY ARCHITECTURE</span>
-          <h2 class="heading-lg">Why Direct QUIC Beats Corporate Clouds</h2>
-          <p class="heading-sub">
-            Traditional chat platforms route every byte through their surveillance infrastructure. Murmur establishes direct mathematical pipes.
-          </p>
+        <div class="section-headline-block">
+          <span class="section-kicker">ENGINEERING BENCHMARKS</span>
+          <h2 class="section-big-title">UNAPOLOGETICALLY FAST</h2>
         </div>
 
-        <div class="comparison-grid">
+        <div class="bento-power-grid">
           
-          <!-- Cloud Card -->
-          <div class="comp-card cloud-card">
-            <div class="comp-header">
-              <span class="comp-badge bad">TRADITIONAL SILO</span>
-              <h3 class="comp-name">Corporate Cloud (Discord/Telegram)</h3>
+          <!-- Card 1: Latency -->
+          <div class="bento-box bento-lime">
+            <div class="bento-corner">[ 01 ]</div>
+            <div class="bento-metric">&lt; 0.4ms</div>
+            <h3 class="bento-h">Sub-Milli Keystroke Render</h3>
+            <p class="bento-text">
+              Direct terminal draw loops via Ratatui 0.30 and Crossterm. Every key you press renders instantly without browser engine overhead.
+            </p>
+            <div class="bento-bar-visual">
+              <div class="bar-fill" style="width: 98%"></div>
             </div>
-            <ul class="comp-list">
-              <li>
-                <span class="icon-cross">&times;</span>
-                <div>
-                  <strong>Centralized Storage:</strong> Your chat logs and metadata are permanently retained on company servers.
-                </div>
-              </li>
-              <li>
-                <span class="icon-cross">&times;</span>
-                <div>
-                  <strong>Single Point of Failure:</strong> Cloud provider outages take down communication globally.
-                </div>
-              </li>
-              <li>
-                <span class="icon-cross">&times;</span>
-                <div>
-                  <strong>Head-of-Line Blocking:</strong> Slow TCP streams stall all other conversation threads.
-                </div>
-              </li>
-              <li>
-                <span class="icon-cross">&times;</span>
-                <div>
-                  <strong>Heavy Bloat:</strong> 300MB+ Electron memory consumption for a simple text box.
-                </div>
-              </li>
-            </ul>
           </div>
 
-          <!-- Murmur Card -->
-          <div class="comp-card murmur-card">
-            <div class="comp-header">
-              <span class="comp-badge good">MURMUR QUIC MESH</span>
-              <h3 class="comp-name">Direct Peer-to-Peer Protocol</h3>
-            </div>
-            <ul class="comp-list">
-              <li>
-                <span class="icon-check">&check;</span>
-                <div>
-                  <strong>Zero-Relay Communication:</strong> Packets flow directly between machines using UDP/QUIC streams.
-                </div>
-              </li>
-              <li>
-                <span class="icon-check">&check;</span>
-                <div>
-                  <strong>Immune to Central Outages:</strong> Once peer addresses are resolved, you can talk even if the internet backbone is degraded.
-                </div>
-              </li>
-              <li>
-                <span class="icon-check">&check;</span>
-                <div>
-                  <strong>Multiplexed Streams:</strong> Loss in one stream never freezes or blocks other chat threads.
-                </div>
-              </li>
-              <li>
-                <span class="icon-check">&check;</span>
-                <div>
-                  <strong>Instant Terminal Performance:</strong> Built with Ratatui 0.30 in native Rust with negligible memory overhead.
-                </div>
-              </li>
-            </ul>
+          <!-- Card 2: Zero Middlemen -->
+          <div class="bento-box bento-cyan">
+            <div class="bento-corner">[ 02 ]</div>
+            <div class="bento-metric">0 B</div>
+            <h3 class="bento-h">Cloud Message Footprint</h3>
+            <p class="bento-text">
+              Your chat packets never traverse a central relay. The registry only maps your handle to your peer ID—your words never touch a third-party server.
+            </p>
+            <div class="bento-chip">ZERO DISK RETENTION</div>
+          </div>
+
+          <!-- Card 3: Memory footprint -->
+          <div class="bento-box bento-amber">
+            <div class="bento-corner">[ 03 ]</div>
+            <div class="bento-metric">8 MB</div>
+            <h3 class="bento-h">Featherweight Memory Usage</h3>
+            <p class="bento-text">
+              While modern chat apps burn 500MB of RAM on heavy web runtimes, Murmur runs as a single lean, statically compiled native Rust binary.
+            </p>
+            <div class="bento-chip amber">98% LESS RAM THAN ELECTRON</div>
+          </div>
+
+          <!-- Card 4: QUIC Multiplexing -->
+          <div class="bento-box bento-white">
+            <div class="bento-corner">[ 04 ]</div>
+            <div class="bento-metric">0-RTT</div>
+            <h3 class="bento-h">Seamless Network Migration</h3>
+            <p class="bento-text">
+              Switching from home Wi-Fi to mobile 5G? QUIC connection migration maintains your chat session without drops or dropped streams.
+            </p>
+            <div class="bento-chip white">TLS 1.3 BUILT-IN</div>
           </div>
 
         </div>
@@ -519,51 +473,54 @@
       </div>
     </section>
 
-    <!-- QUICKSTART & CLI SETUP -->
-    <section class="section-quickstart" id="quickstart">
+    <!-- QUICKSTART / INSTALL -->
+    <section class="section-install" id="install">
       <div class="container">
         
-        <div class="quickstart-container">
-          <div class="section-heading text-left">
-            <span class="section-badge">DEVELOPER QUICKSTART</span>
-            <h2 class="heading-lg">Start Murmur in 3 Commands</h2>
+        <div class="install-card">
+          <div class="install-headline-row">
+            <div>
+              <span class="section-kicker">GET STARTED NOW</span>
+              <h2 class="install-title">JOIN THE MESH IN SECONDS</h2>
+            </div>
+            <div class="install-badge-rust">PURE RUST BINARY</div>
           </div>
 
-          <div class="quickstart-steps">
+          <div class="code-steps-stack">
             
-            <div class="step-row">
-              <div class="step-num">1</div>
-              <div class="step-info">
-                <h4>Install from Cargo</h4>
-                <p>Compile the high-performance binary with zero external runtime dependencies.</p>
+            <div class="code-step">
+              <div class="step-counter">01</div>
+              <div class="step-desc-col">
+                <strong>Install via Cargo</strong>
+                <span>Compile the native binary with zero runtime bloat.</span>
               </div>
-              <div class="step-cli">
+              <div class="step-code-col">
                 <code>cargo install murmur-cli</code>
-                <button class="btn-copy-mini" data-copy="cargo install murmur-cli">Copy</button>
+                <button class="btn-copy-chip" data-copy="cargo install murmur-cli">COPY</button>
               </div>
             </div>
 
-            <div class="step-row">
-              <div class="step-num">2</div>
-              <div class="step-info">
-                <h4>Initialize Your Handle</h4>
-                <p>Registers your node's public key with <code>murmur.debyte.space</code> and starts listening on UDP 8080.</p>
+            <div class="code-step">
+              <div class="step-counter">02</div>
+              <div class="step-desc-col">
+                <strong>Start Your Node & Claim Handle</strong>
+                <span>Initializes your QUIC listener and binds your unique handle.</span>
               </div>
-              <div class="step-cli">
-                <code>murmur run --handle yourname --port 8080</code>
-                <button class="btn-copy-mini" data-copy="murmur run --handle yourname --port 8080">Copy</button>
+              <div class="step-code-col">
+                <code>murmur run --handle yourname</code>
+                <button class="btn-copy-chip" data-copy="murmur run --handle yourname">COPY</button>
               </div>
             </div>
 
-            <div class="step-row">
-              <div class="step-num">3</div>
-              <div class="step-info">
-                <h4>Connect to Any Peer</h4>
-                <p>Establishes direct QUIC hole-punched stream to the target node.</p>
+            <div class="code-step">
+              <div class="step-counter">03</div>
+              <div class="step-desc-col">
+                <strong>Direct Peer Connect</strong>
+                <span>Connect directly to any friend over the decentralized mesh.</span>
               </div>
-              <div class="step-cli">
+              <div class="step-code-col">
                 <code>murmur connect @alice</code>
-                <button class="btn-copy-mini" data-copy="murmur connect @alice">Copy</button>
+                <button class="btn-copy-chip" data-copy="murmur connect @alice">COPY</button>
               </div>
             </div>
 
@@ -574,41 +531,41 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
+  <!-- INDUSTRIAL FOOTER (NOTHING / TEENAGE ENGINEERING STYLE) -->
   <footer class="footer">
-    <div class="container footer-content">
-      <div class="footer-brand">
-        <div class="brand-name">murmur<span class="dot-lime">.</span></div>
-        <p class="footer-tagline">
+    <div class="container footer-grid">
+      <div class="footer-left">
+        <div class="footer-logo">
+          MURMUR<span class="text-lime">.</span>
+        </div>
+        <p class="footer-quote">
           The sovereign peer-to-peer terminal chat application.<br />
-          Built with Rust, Ratatui, and rustp2p-quic.
+          Built by hackers, for hackers. Powered by <code>rustp2p-quic</code>.
         </p>
-        <div class="footer-registry-url">
-          Registry Host: <a href="https://murmur.debyte.space" target="_blank" rel="noopener">murmur.debyte.space</a>
+        <div class="footer-reg-link">
+          Global Handle Registry: <a href="https://murmur.debyte.space" target="_blank" rel="noopener">murmur.debyte.space</a>
         </div>
       </div>
 
-      <div class="footer-links-grid">
-        <div class="footer-col">
-          <div class="col-title">PROTOCOL</div>
-          <a href="#flow">Workflow</a>
-          <a href="#architecture">QUIC Engine</a>
-          <a href="/api/health">Registry Health</a>
-          <a href="/api/peers">Active Peer Set</a>
-        </div>
-        <div class="footer-col">
-          <div class="col-title">ENDPOINTS</div>
+      <div class="footer-right">
+        <div class="footer-nav-col">
+          <span class="col-head">ENDPOINTS</span>
           <a href="/api/check?username=debyte">/api/check</a>
           <a href="/api/lookup?username=debyte">/api/lookup</a>
-          <a href="/api/peers">/api/peers</a>
           <a href="/api/health">/api/health</a>
+        </div>
+        <div class="footer-nav-col">
+          <span class="col-head">TECH</span>
+          <a href="#speed">rustp2p-quic</a>
+          <a href="#showcase">Ratatui 0.30</a>
+          <a href="#handle-search">Upstash Redis</a>
         </div>
       </div>
     </div>
 
-    <div class="container footer-legal">
-      <span>&copy; 2026 Murmur Protocol. Maintained by @debyte. Powered by Upstash Redis & Vercel.</span>
-      <span class="palette-badge">Citrus Pop: #B7FF3C &bull; #1E1F26 &bull; #FFB703 &bull; #2EC4B6</span>
+    <div class="container footer-subline">
+      <span>&copy; 2026 Murmur Mesh. Built by @debyte. Zero trackers. Zero corporate data collection.</span>
+      <span class="citrus-tags">CITRUS POP // #B7FF3C &bull; #FFB703 &bull; #2EC4B6</span>
     </div>
   </footer>
 

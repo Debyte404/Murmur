@@ -1,47 +1,47 @@
-// MURMUR // Frontend Application & Interactive Simulator
+// MURMUR // Keynote Industrial Experience JS
 
 document.addEventListener('DOMContentLoaded', () => {
   initHealthCheck();
-  initWindowTabs();
-  initTuiSimulator();
-  initHandleChecker();
+  initChassisTabs();
+  initChatSimulator();
+  initHandleScanner();
   initCopyButtons();
 });
 
 // ==========================================================================
-// 1. HEALTH CHECK (REGISTRY CONNECTIVITY)
+// 1. HEALTH CHECK (REGISTRY STATUS)
 // ==========================================================================
 async function initHealthCheck() {
-  const healthEl = document.getElementById('healthState');
-  const pulseEl = document.querySelector('.pulse-indicator');
+  const healthVal = document.getElementById('healthState');
+  const radarDot = document.querySelector('.radar-dot');
 
   try {
     const res = await fetch('/api/health');
     if (res.ok) {
       const data = await res.json();
-      if (healthEl) {
-        healthEl.textContent = data.upstash_configured ? 'UPSTASH ONLINE' : 'ONLINE';
+      if (healthVal) {
+        healthVal.textContent = data.upstash_configured ? 'UPSTASH ONLINE' : 'ONLINE';
       }
-      if (pulseEl) {
-        pulseEl.style.backgroundColor = 'var(--color-lime)';
+      if (radarDot) {
+        radarDot.style.backgroundColor = 'var(--lime)';
       }
     } else {
       throw new Error(`HTTP ${res.status}`);
     }
   } catch (err) {
-    if (healthEl) healthEl.textContent = 'LOCAL MOCK';
+    if (healthVal) healthVal.textContent = 'LOCAL MOCK';
   }
 }
 
 // ==========================================================================
-// 2. WINDOW TABS (WATERMELON UI COMPONENT TABS)
+// 2. CHASSIS TABS
 // ==========================================================================
-function initWindowTabs() {
-  const tabs = document.querySelectorAll('.win-tab');
+function initChassisTabs() {
+  const tabs = document.querySelectorAll('.chassis-tab');
   const panes = {
-    tui: document.getElementById('pane-tui'),
-    packets: document.getElementById('pane-packets'),
-    api: document.getElementById('pane-api'),
+    'live-tui': document.getElementById('pane-live-tui'),
+    'stream-inspect': document.getElementById('pane-stream-inspect'),
+    'wire-raw': document.getElementById('pane-wire-raw'),
   };
 
   tabs.forEach((tab) => {
@@ -59,73 +59,73 @@ function initWindowTabs() {
 }
 
 // ==========================================================================
-// 3. INTERACTIVE RATATUI TERMINAL CHAT SIMULATOR
+// 3. INTERACTIVE CHAT SIMULATOR (TUI VIEWPORT)
 // ==========================================================================
-function initTuiSimulator() {
-  const chatArea = document.getElementById('tuiChatArea');
-  const tuiInput = document.getElementById('tuiInput');
-  const tuiSend = document.getElementById('tuiSend');
+function initChatSimulator() {
+  const feed = document.getElementById('liveChatFeed');
+  const input = document.getElementById('simChatInput');
+  const sendBtn = document.getElementById('btnSimSend');
 
-  const btnAlice = document.getElementById('simAliceMsg');
-  const btnHandshake = document.getElementById('simHandshake');
-  const btnPing = document.getElementById('simPing');
-  const btnClear = document.getElementById('simClear');
+  const btnAlice = document.getElementById('trigAlice');
+  const btnHandshake = document.getElementById('trigHandshake');
+  const btnPing = document.getElementById('trigPing');
+  const btnClear = document.getElementById('trigClear');
 
   function getTimestamp() {
-    const now = new Date();
-    return `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+    const d = new Date();
+    return `[${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}]`;
   }
 
-  function appendMessage(authorClass, authorName, text, isSystem = false) {
-    if (!chatArea) return;
+  function appendEntry(authorClass, authorTag, text, isSys = false) {
+    if (!feed) return;
 
     const row = document.createElement('div');
-    row.className = isSystem ? 'msg-row system' : 'msg-row';
+    row.className = isSys ? 'feed-entry sys' : 'feed-entry';
 
     const ts = document.createElement('span');
-    ts.className = 'msg-ts';
+    ts.className = 'f-ts';
     ts.textContent = getTimestamp();
     row.appendChild(ts);
 
-    if (!isSystem) {
+    if (!isSys) {
       const author = document.createElement('span');
-      author.className = `msg-author ${authorClass}`;
-      author.textContent = `<${authorName}>`;
+      author.className = `f-author ${authorClass}`;
+      author.textContent = `<${authorTag}>`;
       row.appendChild(author);
     }
 
-    const body = document.createElement('span');
-    body.className = 'msg-body';
-    body.textContent = isSystem ? `>>> ${text}` : ` ${text}`;
-    row.appendChild(body);
+    const msg = document.createElement('span');
+    msg.className = 'f-msg';
+    msg.textContent = isSys ? `>>> ${text}` : ` ${text}`;
+    row.appendChild(msg);
 
-    chatArea.appendChild(row);
-    chatArea.scrollTop = chatArea.scrollHeight;
+    feed.appendChild(row);
+    feed.scrollTop = feed.scrollHeight;
   }
 
   function handleSend() {
-    if (!tuiInput) return;
-    const text = tuiInput.value.trim();
-    if (!text) return;
+    if (!input) return;
+    const txt = input.value.trim();
+    if (!txt) return;
 
-    appendMessage('user-you', '@you', text);
-    tuiInput.value = '';
+    appendEntry('user', '@you', txt);
+    input.value = '';
 
-    // Simulate automated peer ACK over QUIC
     setTimeout(() => {
       const replies = [
-        "Received your QUIC packet! Handshake validated in 13ms.",
-        "Zero packet loss detected over UDP. Multiplexed stream healthy.",
-        "Direct peer connection active. Bypassed all central intermediaries.",
+        "Packet received in 11ms via direct QUIC stream.",
+        "Zero packet loss detected over UDP socket.",
+        "Ed25519 signature verified on incoming frame.",
+        "Peer session active. Frame payload size: 64B.",
       ];
-      const reply = replies[Math.floor(Math.random() * replies.length)];
-      appendMessage('user-alice', '@alice', reply);
-    }, 450);
+      const r = replies[Math.floor(Math.random() * replies.length)];
+      appendEntry('alice', '@alice', r);
+    }, 400);
   }
 
-  if (tuiSend) tuiSend.addEventListener('click', handleSend);
-  if (tuiInput) {
-    tuiInput.addEventListener('keydown', (e) => {
+  if (sendBtn) sendBtn.addEventListener('click', handleSend);
+  if (input) {
+    input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         handleSend();
@@ -135,76 +135,76 @@ function initTuiSimulator() {
 
   if (btnAlice) {
     btnAlice.addEventListener('click', () => {
-      appendMessage('user-alice', '@alice', 'Testing rustp2p-quic datagram stream... Frame transmitted successfully.');
+      appendEntry('alice', '@alice', 'Transmitted 4KB audio buffer over independent QUIC stream #5.');
     });
   }
 
   if (btnHandshake) {
     btnHandshake.addEventListener('click', () => {
-      appendMessage('', '', 'Initiating 0-RTT QUIC handshake with @neo (quic://zion.mesh:9002)...', true);
+      appendEntry('', '', 'Initiating 0-RTT QUIC handshake with peer (0x10000003)...', true);
       setTimeout(() => {
-        appendMessage('', '', 'TLS 1.3 session ticket validated! QUIC tunnel online (17ms RTT).', true);
-      }, 350);
+        appendEntry('', '', 'TLS 1.3 session ticket validated! QUIC tunnel online (14ms RTT).', true);
+      }, 300);
     });
   }
 
   if (btnPing) {
     btnPing.addEventListener('click', () => {
-      appendMessage('', '', 'Broadcasting QUIC PING to mesh...', true);
-      setTimeout(() => appendMessage('user-alice', '@alice', '[PONG] rtt=14ms loss=0.0%'), 200);
-      setTimeout(() => appendMessage('user-neo', '@neo', '[PONG] rtt=19ms loss=0.0%'), 380);
+      appendEntry('', '', 'Broadcasting mesh ping to active peers...', true);
+      setTimeout(() => appendEntry('alice', '@alice', '[PONG] rtt=12ms loss=0.0%'), 180);
+      setTimeout(() => appendEntry('neo', '@neo', '[PONG] rtt=18ms loss=0.0%'), 320);
     });
   }
 
   if (btnClear) {
     btnClear.addEventListener('click', () => {
-      if (!chatArea) return;
-      chatArea.innerHTML = '';
-      appendMessage('', '', 'Feed cleared. Murmur TUI listener active on udp://0.0.0.0:8080', true);
+      if (!feed) return;
+      feed.innerHTML = '';
+      appendEntry('', '', 'Feed cleared. Murmur TUI listener active on udp://0.0.0.0:8080', true);
     });
   }
 }
 
 // ==========================================================================
-// 4. GLOBAL HANDLE REGISTRY CHECKER
+// 4. LIVE HANDLE SCANNER & CLAIM
 // ==========================================================================
-function initHandleChecker() {
-  const input = document.getElementById('handleInput');
-  const btn = document.getElementById('btnCheckHandle');
-  const btnText = document.getElementById('btnCheckText');
+function initHandleScanner() {
+  const input = document.getElementById('handleSearchInput');
+  const btn = document.getElementById('btnScanHandle');
+  const btnLabel = document.getElementById('btnScanLabel');
 
-  const card = document.getElementById('handleResultCard');
-  const icon = document.getElementById('resultIcon');
-  const title = document.getElementById('resultTitle');
-  const desc = document.getElementById('resultDesc');
-  const cmd = document.getElementById('resultCommandBox');
+  const card = document.getElementById('scanResultCard');
+  const icon = document.getElementById('scanIcon');
+  const title = document.getElementById('scanTitle');
+  const desc = document.getElementById('scanDesc');
+  const cmd = document.getElementById('scanCmdBox');
 
   let debounceTimer = null;
 
   async function check() {
     if (!input) return;
-    const name = input.value.trim().replace(/^@/, '');
+    const raw = input.value.trim().replace(/^@/, '');
 
-    if (!name) {
+    if (!raw) {
       if (card) card.classList.add('hidden');
       return;
     }
 
-    if (name.length < 3) {
+    if (raw.length < 3) {
       showState({
         available: false,
         iconText: '⚠️',
         head: 'HANDLE TOO SHORT',
-        info: 'Handles must be at least 3 characters long (letters, numbers, hyphens, underscores).',
+        info: 'Handles must be between 3 and 24 characters (lowercase letters, numbers, hyphens, underscores).',
         cli: null,
       });
       return;
     }
 
-    if (btnText) btnText.textContent = 'Checking...';
+    if (btnLabel) btnLabel.textContent = 'SCANNING...';
 
     try {
-      const res = await fetch(`/api/check?username=${encodeURIComponent(name)}`);
+      const res = await fetch(`/api/check?username=${encodeURIComponent(raw)}`);
       const data = await res.json();
 
       if (data.available) {
@@ -212,15 +212,15 @@ function initHandleChecker() {
           available: true,
           iconText: '⚡',
           head: `✔ @${data.username} IS AVAILABLE!`,
-          info: `This handle is unclaimed on the global mesh. You can reserve it right now via Murmur CLI or REST API.`,
-          cli: `murmur run --handle ${data.username} --port 8080`,
+          info: 'This handle is unclaimed on the global mesh. You can reserve it right now.',
+          cli: `murmur run --handle ${data.username}`,
         });
       } else {
         showState({
           available: false,
           iconText: '🔒',
-          head: `✖ @${data.username} IS ALREADY TAKEN`,
-          info: data.error || `This handle is already registered on murmur.debyte.space. Try another creative handle!`,
+          head: `✖ @${data.username} IS ALREADY REGISTERED`,
+          info: data.error || 'This handle is already taken on murmur.debyte.space. Try another creative handle!',
           cli: `murmur connect @${data.username}`,
         });
       }
@@ -233,7 +233,7 @@ function initHandleChecker() {
         cli: null,
       });
     } finally {
-      if (btnText) btnText.textContent = 'Check Availability';
+      if (btnLabel) btnLabel.textContent = 'CHECK HANDLE';
     }
   }
 
@@ -280,7 +280,7 @@ function initHandleChecker() {
 }
 
 // ==========================================================================
-// 5. COPY TO CLIPBOARD BUTTONS
+// 5. COPY TO CLIPBOARD
 // ==========================================================================
 function initCopyButtons() {
   document.querySelectorAll('[data-copy]').forEach((btn) => {
@@ -292,12 +292,12 @@ function initCopyButtons() {
         await navigator.clipboard.writeText(text);
         const original = btn.innerHTML;
         btn.innerHTML = '<span>COPIED!</span>';
-        btn.style.borderColor = 'var(--color-lime)';
+        btn.style.borderColor = 'var(--lime)';
 
         setTimeout(() => {
           btn.innerHTML = original;
           btn.style.borderColor = '';
-        }, 1600);
+        }, 1500);
       } catch (err) {
         console.warn('Clipboard failed:', err);
       }

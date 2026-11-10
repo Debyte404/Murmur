@@ -15,11 +15,9 @@ module.exports = async (req, res) => {
 
   return res.status(200).json({
     status: 'online',
-    service: 'Murmur Global P2P Registry',
+    service: 'Murmur Global Handle Registry',
     version: '1.0.0',
-    protocol: 'rustp2p-quic/0.1.2',
     domain: 'murmur.debyte.space',
-    quic_transport: 'multiplexed-udp',
     storage_backend: hasUpstash ? 'upstash-redis' : 'memory-store',
     upstash_configured: hasUpstash,
     timestamp: new Date().toISOString(),

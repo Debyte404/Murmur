@@ -28,7 +28,9 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       ok: true,
-      peer,
+      username: peer.username,
+      peer_id: peer.peer_id,
+      registered_at: peer.registered_at,
     });
   } catch (err) {
     return res.status(500).json({ ok: false, error: err.message });
