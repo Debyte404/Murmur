@@ -4,18 +4,24 @@
 # Exit 1 = Proceed with deployment
 # Exit 0 = Skip / cancel deployment
 
-echo "🔍 Checking if registry or website has changes in this commit..."
+echo "🔍 Checking if registry-server has changes in this commit..."
 
-# If parent commit is unavailable (e.g. initial commit), proceed with build
 if ! git rev-parse HEAD^ >/dev/null 2>&1; then
   echo "⚡ Initial commit or shallow clone. Proceeding with build."
   exit 1
 fi
 
-if git diff HEAD^ HEAD --quiet -- registry-server api public lib vercel.json package.json; then
-  echo "🛑 No registry or web changes. Skipping Vercel deployment."
+# Determine whether running from inside registry-server or repo root
+if [ -f "package.json" ] && [ -d "api" ] && [ ! -d "registry-server" ]; then
+  CHECK_DIR="."
+else
+  CHECK_DIR="registry-server"
+fi
+
+if git diff HEAD^ HEAD --quiet -- "$CHECK_DIR"; then
+  echo "🛑 No changes in $CHECK_DIR. Skipping Vercel deployment."
   exit 0
 else
-  echo "🚀 Registry/web changes detected. Proceeding with deployment."
+  echo "🚀 Changes detected in $CHECK_DIR. Proceeding with deployment."
   exit 1
 fi
