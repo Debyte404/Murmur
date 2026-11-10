@@ -1,101 +1,99 @@
-// MURMUR // Keynote Industrial Experience JS
+// Murmur Frontend Controller & Interactive Terminal Simulator
 
 document.addEventListener('DOMContentLoaded', () => {
-  initHealthCheck();
-  initChassisTabs();
-  initChatSimulator();
-  initHandleScanner();
+  initHealth();
+  initTerminalTabs();
+  initTerminalSimulator();
+  initRadarScanner();
   initCopyButtons();
 });
 
 // ==========================================================================
-// 1. HEALTH CHECK (REGISTRY STATUS)
+// 1. HEALTH STATUS
 // ==========================================================================
-async function initHealthCheck() {
-  const healthVal = document.getElementById('healthState');
-  const radarDot = document.querySelector('.radar-dot');
+async function initHealth() {
+  const healthEl = document.getElementById('healthState');
+  const beacon = document.querySelector('.status-beacon');
 
   try {
     const res = await fetch('/api/health');
     if (res.ok) {
       const data = await res.json();
-      if (healthVal) {
-        healthVal.textContent = data.upstash_configured ? 'UPSTASH ONLINE' : 'ONLINE';
+      if (healthEl) {
+        healthEl.textContent = data.upstash_configured ? 'UPSTASH ONLINE' : 'ONLINE';
       }
-      if (radarDot) {
-        radarDot.style.backgroundColor = 'var(--lime)';
-      }
+      if (beacon) beacon.style.backgroundColor = 'var(--lime)';
     } else {
       throw new Error(`HTTP ${res.status}`);
     }
-  } catch (err) {
-    if (healthVal) healthVal.textContent = 'LOCAL MOCK';
+  } catch {
+    if (healthEl) healthEl.textContent = 'LOCAL MOCK';
   }
 }
 
 // ==========================================================================
-// 2. CHASSIS TABS
+// 2. TERMINAL TABS
 // ==========================================================================
-function initChassisTabs() {
-  const tabs = document.querySelectorAll('.chassis-tab');
-  const panes = {
-    'live-tui': document.getElementById('pane-live-tui'),
-    'stream-inspect': document.getElementById('pane-stream-inspect'),
-    'wire-raw': document.getElementById('pane-wire-raw'),
+function initTerminalTabs() {
+  const tabs = document.querySelectorAll('.term-tab');
+  const views = {
+    chat: document.getElementById('view-chat'),
+    packets: document.getElementById('view-packets'),
+    registry: document.getElementById('view-registry'),
   };
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       tabs.forEach((t) => t.classList.remove('active'));
-      Object.values(panes).forEach((p) => p && p.classList.remove('active'));
+      Object.values(views).forEach((v) => v && v.classList.remove('active'));
 
       tab.classList.add('active');
       const target = tab.getAttribute('data-tab');
-      if (panes[target]) {
-        panes[target].classList.add('active');
+      if (views[target]) {
+        views[target].classList.add('active');
       }
     });
   });
 }
 
 // ==========================================================================
-// 3. INTERACTIVE CHAT SIMULATOR (TUI VIEWPORT)
+// 3. INTERACTIVE TERMINAL CHAT
 // ==========================================================================
-function initChatSimulator() {
-  const feed = document.getElementById('liveChatFeed');
-  const input = document.getElementById('simChatInput');
-  const sendBtn = document.getElementById('btnSimSend');
+function initTerminalSimulator() {
+  const feed = document.getElementById('chatFeed');
+  const input = document.getElementById('interactiveInput');
+  const sendBtn = document.getElementById('btnSendChat');
 
-  const btnAlice = document.getElementById('trigAlice');
-  const btnHandshake = document.getElementById('trigHandshake');
-  const btnPing = document.getElementById('trigPing');
-  const btnClear = document.getElementById('trigClear');
+  const chipAlice = document.getElementById('chipAlice');
+  const chipHandshake = document.getElementById('chipHandshake');
+  const chipPing = document.getElementById('chipPing');
+  const chipClear = document.getElementById('chipClear');
 
   function getTimestamp() {
     const d = new Date();
     return `[${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}]`;
   }
 
-  function appendEntry(authorClass, authorTag, text, isSys = false) {
+  function appendChat(authorClass, authorTag, text, isSys = false) {
     if (!feed) return;
 
     const row = document.createElement('div');
-    row.className = isSys ? 'feed-entry sys' : 'feed-entry';
+    row.className = isSys ? 'chat-row sys' : 'chat-row';
 
     const ts = document.createElement('span');
-    ts.className = 'f-ts';
+    ts.className = 'chat-ts';
     ts.textContent = getTimestamp();
     row.appendChild(ts);
 
     if (!isSys) {
       const author = document.createElement('span');
-      author.className = `f-author ${authorClass}`;
+      author.className = `chat-sender ${authorClass}`;
       author.textContent = `<${authorTag}>`;
       row.appendChild(author);
     }
 
     const msg = document.createElement('span');
-    msg.className = 'f-msg';
+    msg.className = 'chat-text';
     msg.textContent = isSys ? `>>> ${text}` : ` ${text}`;
     row.appendChild(msg);
 
@@ -108,7 +106,7 @@ function initChatSimulator() {
     const txt = input.value.trim();
     if (!txt) return;
 
-    appendEntry('user', '@you', txt);
+    appendChat('user', '@you', txt);
     input.value = '';
 
     setTimeout(() => {
@@ -119,7 +117,7 @@ function initChatSimulator() {
         "Peer session active. Frame payload size: 64B.",
       ];
       const r = replies[Math.floor(Math.random() * replies.length)];
-      appendEntry('alice', '@alice', r);
+      appendChat('alice', '@alice', r);
     }, 400);
   }
 
@@ -133,51 +131,51 @@ function initChatSimulator() {
     });
   }
 
-  if (btnAlice) {
-    btnAlice.addEventListener('click', () => {
-      appendEntry('alice', '@alice', 'Transmitted 4KB audio buffer over independent QUIC stream #5.');
+  if (chipAlice) {
+    chipAlice.addEventListener('click', () => {
+      appendChat('alice', '@alice', 'Transmitted 4KB audio buffer over independent QUIC stream #5.');
     });
   }
 
-  if (btnHandshake) {
-    btnHandshake.addEventListener('click', () => {
-      appendEntry('', '', 'Initiating 0-RTT QUIC handshake with peer (0x10000003)...', true);
+  if (chipHandshake) {
+    chipHandshake.addEventListener('click', () => {
+      appendChat('', '', 'Initiating 0-RTT QUIC handshake with peer (0x10000003)...', true);
       setTimeout(() => {
-        appendEntry('', '', 'TLS 1.3 session ticket validated! QUIC tunnel online (14ms RTT).', true);
+        appendChat('', '', 'TLS 1.3 session ticket validated! QUIC tunnel online (14ms RTT).', true);
       }, 300);
     });
   }
 
-  if (btnPing) {
-    btnPing.addEventListener('click', () => {
-      appendEntry('', '', 'Broadcasting mesh ping to active peers...', true);
-      setTimeout(() => appendEntry('alice', '@alice', '[PONG] rtt=12ms loss=0.0%'), 180);
-      setTimeout(() => appendEntry('neo', '@neo', '[PONG] rtt=18ms loss=0.0%'), 320);
+  if (chipPing) {
+    chipPing.addEventListener('click', () => {
+      appendChat('', '', 'Broadcasting mesh ping to active peers...', true);
+      setTimeout(() => appendChat('alice', '@alice', '[PONG] rtt=12ms loss=0.0%'), 180);
+      setTimeout(() => appendChat('neo', '@neo', '[PONG] rtt=18ms loss=0.0%'), 320);
     });
   }
 
-  if (btnClear) {
-    btnClear.addEventListener('click', () => {
+  if (chipClear) {
+    chipClear.addEventListener('click', () => {
       if (!feed) return;
       feed.innerHTML = '';
-      appendEntry('', '', 'Feed cleared. Murmur TUI listener active on udp://0.0.0.0:8080', true);
+      appendChat('', '', 'Feed cleared. Murmur TUI listener active on udp://0.0.0.0:8080', true);
     });
   }
 }
 
 // ==========================================================================
-// 4. LIVE HANDLE SCANNER & CLAIM
+// 4. RADAR HANDLE SCANNER
 // ==========================================================================
-function initHandleScanner() {
-  const input = document.getElementById('handleSearchInput');
-  const btn = document.getElementById('btnScanHandle');
-  const btnLabel = document.getElementById('btnScanLabel');
+function initRadarScanner() {
+  const input = document.getElementById('radarInput');
+  const btn = document.getElementById('btnRadarCheck');
+  const btnLabel = document.getElementById('btnRadarLabel');
 
-  const card = document.getElementById('scanResultCard');
-  const icon = document.getElementById('scanIcon');
-  const title = document.getElementById('scanTitle');
-  const desc = document.getElementById('scanDesc');
-  const cmd = document.getElementById('scanCmdBox');
+  const card = document.getElementById('radarResult');
+  const icon = document.getElementById('radarIcon');
+  const title = document.getElementById('radarTitle');
+  const desc = document.getElementById('radarDesc');
+  const cmd = document.getElementById('radarCmd');
 
   let debounceTimer = null;
 
@@ -233,7 +231,7 @@ function initHandleScanner() {
         cli: null,
       });
     } finally {
-      if (btnLabel) btnLabel.textContent = 'CHECK HANDLE';
+      if (btnLabel) btnLabel.textContent = 'Check Handle';
     }
   }
 
