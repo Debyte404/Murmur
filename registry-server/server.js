@@ -8,6 +8,7 @@ const registerHandler = require('./api/register');
 const lookupHandler = require('./api/lookup');
 const peersHandler = require('./api/peers');
 const heartbeatHandler = require('./api/heartbeat');
+const releaseHandler = require('./api/release');
 const healthHandler = require('./api/health');
 
 const PORT = process.env.PORT || 3000;
@@ -40,8 +41,8 @@ function createVercelAdapter(handler) {
       res.end(JSON.stringify(data, null, 2));
     };
 
-    // Parse body for POST/PUT
-    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+    // Parse body for POST/PUT/DELETE
+    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH' || req.method === 'DELETE') {
       let bodyData = '';
       req.on('data', (chunk) => {
         bodyData += chunk;
@@ -67,6 +68,7 @@ const routes = {
   '/api/lookup': createVercelAdapter(lookupHandler),
   '/api/peers': createVercelAdapter(peersHandler),
   '/api/heartbeat': createVercelAdapter(heartbeatHandler),
+  '/api/release': createVercelAdapter(releaseHandler),
   '/api/health': createVercelAdapter(healthHandler),
 };
 

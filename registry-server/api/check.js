@@ -1,7 +1,6 @@
-const { isUsernameAvailable } = require('../lib/store');
+const { isUsernameAvailable, mapErrorToStatus } = require('../lib/store');
 
 module.exports = async (req, res) => {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -15,6 +14,7 @@ module.exports = async (req, res) => {
     if (!username) {
       return res.status(400).json({
         ok: false,
+        code: 'INVALID',
         error: 'Query parameter "username" is required (e.g. /api/check?username=debyte)',
       });
     }
@@ -24,12 +24,16 @@ module.exports = async (req, res) => {
       ok: true,
       username: result.username,
       available: result.available,
-      error: result.error || null,
       message: result.available
         ? `Username '@${result.username}' is available!`
         : `Username '@${result.username}' is already taken.`,
     });
   } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message });
+    const status = mapErrorToStatus(err);
+    return res.status(status).json({
+      ok: false,
+      code: err.code || 'INTERNAL_ERROR',
+      error: err.message,
+    });
   }
 };

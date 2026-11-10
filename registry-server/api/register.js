@@ -1,4 +1,4 @@
-const { registerUser } = require('../lib/store');
+const { registerUser, mapErrorToStatus } = require('../lib/store');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,32 +10,38 @@ module.exports = async (req, res) => {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed. Use POST.' });
+    return res.status(405).json({ ok: false, code: 'METHOD_NOT_ALLOWED', error: 'Method not allowed. Use POST.' });
   }
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
-    const { username, peer_id, peerId, nodeId } = body;
+    const { username, peer_id, peerId, nodeId, token, public_key, pubkey } = body;
 
     const resolvedPeerId = peer_id || peerId || nodeId;
 
-    if (!username) {
-      return res.status(400).json({ ok: false, error: 'Missing required field: username' });
-    }
-    if (!resolvedPeerId) {
-      return res.status(400).json({ ok: false, error: 'Missing required field: peer_id' });
-    }
+    const record = await registerUser({
+      username,
+      peer_id: resolvedPeerId,
+      token,
+      public_key: public_key || pubkey,
+    });
 
-    const record = await registerUser({ username, peer_id: resolvedPeerId });
     return res.status(201).json({
       ok: true,
       message: `Handle '@${record.username}' registered successfully!`,
-      peer: record,
+      peer: {
+        username: record.username,
+        peer_id: record.peer_id,
+        public_key: record.public_key,
+        registered_at: record.registered_at,
+      },
+      token: record.token, // Secret credentials returned once for client ~/.config/murmur/creds
     });
   } catch (err) {
-    const isConflict = err.message.includes('already taken');
-    return res.status(isConflict ? 409 : 400).json({
+    const status = mapErrorToStatus(err);
+    return res.status(status).json({
       ok: false,
+      code: err.code || 'INTERNAL_ERROR',
       error: err.message,
     });
   }

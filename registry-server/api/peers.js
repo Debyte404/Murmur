@@ -1,4 +1,4 @@
-const { listPeers } = require('../lib/store');
+const { listPeers, mapErrorToStatus } = require('../lib/store');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,9 +19,14 @@ module.exports = async (req, res) => {
       network: 'murmur-global-quic',
       domain: 'murmur.debyte.space',
       protocol: 'rustp2p-quic/0.1.2',
-      peers,
+      peers, // Never contains token_hash
     });
   } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message });
+    const status = mapErrorToStatus(err);
+    return res.status(status).json({
+      ok: false,
+      code: err.code || 'INTERNAL_ERROR',
+      error: err.message,
+    });
   }
 };

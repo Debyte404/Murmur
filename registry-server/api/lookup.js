@@ -1,4 +1,4 @@
-const { lookupUser } = require('../lib/store');
+const { lookupUser, mapErrorToStatus } = require('../lib/store');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,25 +14,26 @@ module.exports = async (req, res) => {
     if (!username) {
       return res.status(400).json({
         ok: false,
+        code: 'INVALID',
         error: 'Query parameter "username" is required (e.g. /api/lookup?username=debyte)',
       });
     }
 
     const peer = await lookupUser(username);
-    if (!peer) {
-      return res.status(404).json({
-        ok: false,
-        error: `User '@${username}' not found in registry`,
-      });
-    }
-
     return res.status(200).json({
       ok: true,
       username: peer.username,
       peer_id: peer.peer_id,
+      public_key: peer.public_key || null,
       registered_at: peer.registered_at,
+      last_seen: peer.last_seen,
     });
   } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message });
+    const status = mapErrorToStatus(err);
+    return res.status(status).json({
+      ok: false,
+      code: err.code || 'INTERNAL_ERROR',
+      error: err.message,
+    });
   }
 };
