@@ -1,3 +1,4 @@
+mod message;
 use rustp2p_quic::{Endpoint, Identity};
 use std::net::SocketAddr;
 use tokio::io::{AsyncBufReadExt, BufReader};
